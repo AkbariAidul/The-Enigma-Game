@@ -1,0 +1,531 @@
+:root {
+    /* Warna Palet */
+    --color-dark-void: #00000a; /* Hampir hitam */
+    --color-deep-purple: #1a0033; /* Ungu sangat gelap */
+    --color-cyber-blue: #00aaff; /* Biru terang keunguan */
+    --color-cyber-pink: #ff00ff; /* Pink magenta neon */
+    --color-cyber-green: #39ff14; /* Hijau neon */
+    --color-cyber-orange: #ffa500; /* Oranye neon */
+    --color-text-primary: #e0e0e0; /* Teks terang */
+    --color-text-secondary: #aaaaaa; /* Teks sekunder */
+
+    /* Efek Glow */
+    --glow-light: 0 0 10px rgba(var(--color-cyber-blue), 0.8), 0 0 20px rgba(var(--color-cyber-pink), 0.6);
+    --glow-medium: 0 0 20px rgba(var(--color-cyber-blue), 1), 0 0 30px rgba(var(--color-cyber-pink), 0.8);
+    --glow-strong: 0 0 30px rgba(var(--color-cyber-blue), 1.2), 0 0 40px rgba(var(--color-cyber-pink), 1);
+    --glow-success: 0 0 25px var(--color-cyber-green), 0 0 35px var(--color-cyber-green);
+    --glow-error: 0 0 25px var(--color-cyber-pink), 0 0 35px var(--color-cyber-pink);
+    --glow-warning: 0 0 20px var(--color-cyber-orange), 0 0 30px var(--color-cyber-orange);
+
+    /* Transisi & Durasi Animasi */
+    --transition-fast: 0.2s ease-out;
+    --transition-medium: 0.4s ease-in-out;
+    --animation-speed-bg: 30s;
+    --animation-speed-main: 2s;
+    --animation-speed-slow: 5s;
+}
+
+/* GLOBAL RESET & BASE STYLES */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--color-dark-void);
+    color: var(--color-text-primary);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* Penting untuk animasi fullscreen */
+    position: relative;
+}
+
+/* BACKGROUND ANIMATIONS */
+.background-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -5; /* Paling belakang */
+    background: radial-gradient(circle at 50% 50%, var(--color-deep-purple) 0%, var(--color-dark-void) 80%);
+}
+
+/* Data Stream Effect */
+.data-stream {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(var(--color-cyber-blue), 0.05) 1px, rgba(var(--color-cyber-blue), 0.05) 2px),
+        repeating-linear-gradient(90deg, transparent, transparent 1px, rgba(var(--color-cyber-pink), 0.05) 1px, rgba(var(--color-cyber-pink), 0.05) 2px);
+    background-size: 50px 50px;
+    animation: dataFlow var(--animation-speed-bg) linear infinite;
+    opacity: 0.3;
+}
+
+@keyframes dataFlow {
+    from { background-position: 0 0; }
+    to { background-position: 50px 50px; }
+}
+
+/* Main Circuit Grid */
+.circuit-grid-main {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle, rgba(var(--color-cyber-blue), 0.07) 1px, transparent 1px),
+        radial-gradient(circle, rgba(var(--color-cyber-pink), 0.07) 1px, transparent 1px);
+    background-size: 80px 80px;
+    background-position: 0 0, 40px 40px;
+    opacity: 0.2;
+    animation: circuitPulse var(--animation-speed-slow) infinite alternate;
+}
+
+@keyframes circuitPulse {
+    0% { opacity: 0.2; transform: scale(1); }
+    100% { opacity: 0.15; transform: scale(1.01); }
+}
+
+/* Corner Glows */
+.corner-glow {
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.4;
+    z-index: -4;
+    animation: glowFade var(--animation-speed-slow) infinite alternate;
+}
+
+.top-left { top: -50px; left: -50px; background-color: var(--color-cyber-blue); }
+.top-right { top: -50px; right: -50px; background-color: var(--color-cyber-pink); }
+.bottom-left { bottom: -50px; left: -50px; background-color: var(--color-cyber-green); }
+.bottom-right { bottom: -50px; right: -50px; background-color: var(--color-cyber-orange); }
+
+@keyframes glowFade {
+    0% { opacity: 0.4; transform: scale(1); }
+    100% { opacity: 0.5; transform: scale(1.05); }
+}
+
+
+/* GAME LAYOUT & TITLE */
+.game-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 60px; /* Jarak antara judul dan area game */
+    z-index: 1;
+    padding: 20px;
+    width: 100%; /* Agar bisa mengambil lebar penuh */
+    max-width: 1400px; /* Lebar maksimum untuk desktop */
+}
+
+.game-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(4em, 10vw, 8em); /* Judul sangat besar dan mencolok */
+    font-weight: 900;
+    color: transparent; /* Awalnya transparan */
+    background: linear-gradient(45deg, var(--color-cyber-blue), var(--color-cyber-pink), var(--color-cyber-green));
+    -webkit-background-clip: text;
+    background-clip: text;
+    text-shadow: var(--glow-strong); /* Glow kuat pada teks */
+    animation: titleGlow var(--animation-speed-main) infinite alternate, glitchEffect 0.5s infinite alternate; /* Glitch halus */
+    line-height: 0.8; /* Rapat */
+    margin-bottom: -0.1em; /* Mengurangi ruang bawah */
+}
+
+@keyframes titleGlow {
+    0% { text-shadow: var(--glow-strong); }
+    100% { text-shadow: 0 0 40px rgba(var(--color-cyber-pink), 1.2), 0 0 50px rgba(var(--color-cyber-blue), 1); }
+}
+
+@keyframes glitchEffect {
+    0% { transform: translate(0); text-shadow: var(--glow-strong); }
+    20% { transform: translate(-2px, 2px); text-shadow: var(--glow-strong); }
+    40% { transform: translate(-2px, -2px); text-shadow: var(--glow-strong); }
+    60% { transform: translate(2px, 2px); text-shadow: var(--glow-strong); }
+    80% { transform: translate(2px, -2px); text-shadow: var(--glow-strong); }
+    100% { transform: translate(0); text-shadow: var(--glow-strong); }
+}
+
+
+.game-area-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr; /* Game panel lebih lebar */
+    gap: 80px; /* Jarak antara panel */
+    width: 100%;
+    max-width: 1200px; /* Batasi lebar area game */
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* GENERAL PANEL STYLES (game-panel, score-panel) */
+.panel {
+    background-color: rgba(var(--color-deep-purple), 0.6); /* Lebih transparan */
+    backdrop-filter: blur(15px); /* Efek hologram yang kuat */
+    border: 1px solid var(--color-cyber-blue); /* Border tipis */
+    border-radius: 25px;
+    padding: 50px;
+    position: relative;
+    overflow: hidden; /* Untuk efek internal */
+    box-shadow: var(--glow-medium);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    transition: all var(--transition-medium);
+}
+
+.panel:hover {
+    transform: translateY(-8px) scale(1.01);
+    box-shadow: var(--glow-strong);
+}
+
+/* Panel Border Effect (Animated) */
+.panel-border-effect {
+    position: absolute;
+    top: -5px; left: -5px; right: -5px; bottom: -5px;
+    border-radius: 28px;
+    background: linear-gradient(45deg, var(--color-cyber-blue), var(--color-cyber-pink), var(--color-cyber-orange), var(--color-cyber-blue));
+    background-size: 400% 400%;
+    filter: blur(8px);
+    opacity: 0.7;
+    animation: borderEffect var(--animation-speed-main) infinite alternate;
+    z-index: -1; /* Di bawah panel */
+}
+
+@keyframes borderEffect {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 100% 100%; }
+}
+
+/* Panel Static Pattern (Inner Grid) */
+.panel-static-pattern {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-image: 
+        linear-gradient(0deg, rgba(var(--color-cyber-blue), 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(var(--color-cyber-pink), 0.08) 1px, transparent 1px);
+    background-size: 40px 40px;
+    opacity: 0.4;
+    z-index: 0;
+}
+
+/* Panel Glare Effect (Subtle animation) */
+.panel-glare-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, transparent, rgba(255,255,255,0.05) 50%, transparent);
+    animation: glarePulse var(--animation-speed-slow) infinite alternate;
+    z-index: 2; /* Di atas konten */
+    pointer-events: none;
+    opacity: 0.1;
+}
+
+@keyframes glarePulse {
+    0% { opacity: 0.1; transform: translateX(0); }
+    50% { opacity: 0.15; transform: translateX(10%); }
+    100% { opacity: 0.1; transform: translateX(0); }
+}
+
+
+/* GAME PANEL SPECIFIC STYLES */
+.game-message {
+    font-size: clamp(1.6em, 3vw, 2em);
+    margin-bottom: 50px;
+    color: var(--color-text-primary);
+    text-shadow: var(--glow-light);
+    font-weight: 600;
+    line-height: 1.5;
+    transition: all var(--transition-medium);
+    animation: textAppear 0.8s ease-out; /* Animasi muncul */
+}
+
+@keyframes textAppear {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+
+.input-container {
+    position: relative;
+    width: 80%; /* Lebar input dalam panel */
+    margin-bottom: 60px;
+}
+
+#guessInput {
+    background-color: rgba(50, 10, 80, 0.9);
+    border: none;
+    border-radius: 10px;
+    color: var(--color-text-primary);
+    padding: 25px 35px;
+    width: 100%;
+    font-size: clamp(1.8em, 4vw, 2.5em);
+    text-align: center;
+    font-family: 'Orbitron', sans-serif;
+    outline: none;
+    box-shadow: inset 0 0 15px rgba(var(--color-cyber-blue), 0.5);
+    transition: all var(--transition-medium);
+    line-height: 1; /* Rapat */
+}
+
+#guessInput::placeholder {
+    color: rgba(var(--color-text-primary), 0.4);
+    opacity: 1; /* Browser default kadang mengubah opacity */
+}
+
+#guessInput:focus {
+    box-shadow: inset 0 0 25px rgba(var(--color-cyber-pink), 0.8);
+    background-color: rgba(60, 15, 90, 0.95);
+}
+
+.input-underline {
+    position: absolute;
+    bottom: -10px; /* Di bawah input */
+    left: 50%;
+    transform: translateX(-50%) scaleX(0);
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(90deg, transparent, var(--color-cyber-green), transparent);
+    border-radius: 5px;
+    transition: transform var(--transition-medium), opacity var(--transition-medium);
+    opacity: 0;
+}
+
+#guessInput:focus + .input-underline {
+    transform: translateX(-50%) scaleX(1);
+    opacity: 1;
+    animation: inputLineGlow var(--animation-speed-main) infinite alternate;
+}
+
+@keyframes inputLineGlow {
+    0% { background: linear-gradient(90deg, transparent, var(--color-cyber-green), transparent); }
+    100% { background: linear-gradient(90deg, transparent, var(--color-cyber-blue), transparent); }
+}
+
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-bottom: 50px;
+}
+
+.btn {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1.4em, 2.8vw, 1.8em);
+    padding: 20px 50px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all var(--transition-medium);
+    position: relative;
+    overflow: hidden;
+    letter-spacing: 0.05em; /* Sedikit spasi antar huruf */
+}
+
+.btn::before { /* Kilatan */
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 50%;
+    height: 100%;
+    background: rgba(255,255,255,0.2);
+    transform: skewX(-20deg);
+    transition: left 0.6s ease-out;
+}
+
+.btn:hover::before {
+    left: 150%;
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, var(--color-cyber-blue), var(--color-cyber-pink));
+    color: white;
+    box-shadow: var(--glow-medium);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(45deg, var(--color-cyber-pink), var(--color-cyber-blue));
+    transform: translateY(-10px);
+    box-shadow: var(--glow-strong);
+}
+
+.btn-secondary {
+    background: var(--color-dark-void);
+    color: var(--color-text-primary);
+    border: 3px solid var(--color-cyber-orange);
+    box-shadow: 0 0 15px var(--color-cyber-orange);
+}
+
+.btn-secondary:hover {
+    background: var(--color-cyber-orange);
+    color: var(--color-dark-void);
+    transform: translateY(-10px);
+    box-shadow: 0 0 25px var(--color-cyber-orange);
+}
+
+.btn.hidden {
+    display: none;
+}
+
+.attempts-display {
+    font-size: clamp(1.6em, 3.2vw, 2em);
+    color: var(--color-cyber-orange);
+    font-weight: 700;
+    text-shadow: 0 0 15px var(--color-cyber-orange);
+    font-family: 'Press Start 2P', cursive;
+    letter-spacing: 0.08em;
+    animation: attemptsPulse var(--animation-speed-main) infinite alternate;
+    transition: all var(--transition-medium);
+}
+
+@keyframes attemptsPulse {
+    0% { transform: scale(1); text-shadow: 0 0 15px var(--color-cyber-orange); }
+    100% { transform: scale(1.02); text-shadow: 0 0 20px var(--color-cyber-orange); }
+}
+
+
+/* SCORE PANEL SPECIFIC STYLES */
+.score-panel {
+    justify-content: center; /* Tengah vertikal */
+}
+
+.score-title {
+    font-family: 'Orbitron', sans-serif;
+    color: var(--color-cyber-blue);
+    font-size: clamp(2em, 3.5vw, 2.8em);
+    margin-bottom: 30px;
+    text-shadow: var(--glow-medium);
+}
+
+.best-score-display {
+    font-family: 'Press Start 2P', cursive;
+    font-size: clamp(4em, 6vw, 5em);
+    font-weight: bold;
+    color: var(--color-cyber-green);
+    text-shadow: var(--glow-success);
+    margin: 0;
+    animation: bestScorePulse 2s infinite alternate;
+}
+
+@keyframes bestScorePulse {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(1.05); opacity: 0.9; }
+}
+
+.score-label {
+    font-size: clamp(1.2em, 2.5vw, 1.5em);
+    color: var(--color-text-secondary);
+    margin-top: 15px;
+    font-weight: 300;
+    letter-spacing: 0.05em;
+}
+
+/* RESPONSIVENESS FOR TABLETS (desktop-first) */
+@media (max-width: 1200px) {
+    .game-area-grid {
+        grid-template-columns: 1fr; /* Stack panels vertically */
+        gap: 60px;
+    }
+    .panel {
+        padding: 40px;
+    }
+    .game-title {
+        font-size: clamp(3em, 8vw, 6em);
+    }
+}
+
+@media (max-width: 768px) {
+    .game-wrapper {
+        gap: 40px;
+        padding: 10px;
+    }
+    .game-title {
+        font-size: clamp(2.5em, 12vw, 5em);
+    }
+    .panel {
+        padding: 30px;
+        border-radius: 20px;
+    }
+    .game-message {
+        font-size: clamp(1.4em, 5vw, 1.8em);
+        margin-bottom: 40px;
+    }
+    .input-container {
+        width: 90%;
+        margin-bottom: 50px;
+    }
+    #guessInput {
+        font-size: clamp(1.6em, 6vw, 2em);
+        padding: 20px 25px;
+    }
+    .button-container {
+        flex-direction: column; /* Tombol stack vertikal */
+        gap: 20px;
+        margin-bottom: 40px;
+    }
+    .btn {
+        width: 100%;
+        max-width: none;
+        font-size: clamp(1.2em, 4vw, 1.5em);
+        padding: 18px 30px;
+    }
+    .attempts-display {
+        font-size: clamp(1.4em, 4.5vw, 1.8em);
+    }
+    .score-title {
+        font-size: clamp(1.8em, 5vw, 2.5em);
+    }
+    .best-score-display {
+        font-size: clamp(3.5em, 7vw, 4.5em);
+    }
+    .score-label {
+        font-size: clamp(1.1em, 3vw, 1.4em);
+    }
+}
+
+@media (max-width: 480px) {
+    .game-wrapper {
+        gap: 30px;
+    }
+    .game-title {
+        font-size: clamp(2em, 15vw, 4em);
+    }
+    .panel {
+        padding: 25px;
+        border-radius: 15px;
+    }
+    .game-message {
+        font-size: clamp(1.2em, 6vw, 1.5em);
+        margin-bottom: 30px;
+    }
+    #guessInput {
+        font-size: clamp(1.4em, 7vw, 1.8em);
+        padding: 15px 20px;
+    }
+    .button-container {
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+    .btn {
+        font-size: clamp(1em, 5vw, 1.3em);
+        padding: 15px 25px;
+    }
+    .attempts-display {
+        font-size: clamp(1.2em, 5vw, 1.5em);
+    }
+}

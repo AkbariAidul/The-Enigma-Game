@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE BINARY ENIGMA - Guessing Game</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Montserrat:wght@300;400;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-canvas">
+        <div class="data-stream"></div>
+        <div class="circuit-grid-main"></div>
+        <div class="corner-glow top-left"></div>
+        <div class="corner-glow top-right"></div>
+        <div class="corner-glow bottom-left"></div>
+        <div class="corner-glow bottom-right"></div>
+    </div>
+
+    <div class="game-wrapper">
+        <h1 class="game-title" id="gameTitle">THE BINARY ENIGMA</h1>
+        
+        <div class="game-area-grid">
+            <div class="game-panel panel">
+                <div class="panel-border-effect"></div>
+                <div class="panel-static-pattern"></div>
+                <div class="panel-glare-effect"></div>
+
+                <p id="message" class="game-message">Aku memikirkan angka antara 1 sampai 100. Coba tebak!</p>
+                
+                <div class="input-container">
+                    <input type="number" id="guessInput" placeholder="Masukkan Nilaimu!" min="1" max="100">
+                    <span class="input-underline"></span>
+                </div>
+                
+                <div class="button-container">
+                    <button id="checkButton" class="btn btn-primary">PERIKSA</button>
+                    <button id="resetButton" class="btn btn-secondary hidden">MAIN LAGI</button>
+                </div>
+                
+                <p id="attempts" class="attempts-display">Percobaan: 0</p>
+            </div>
+
+            <div class="score-panel panel">
+                <div class="panel-border-effect"></div>
+                <div class="panel-static-pattern"></div>
+                <div class="panel-glare-effect"></div>
+
+                <h2 class="score-title">BEST SCORE</h2>
+                <p id="bestScore" class="best-score-display">0</p>
+                <p class="score-label">PERCOBAAN</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
